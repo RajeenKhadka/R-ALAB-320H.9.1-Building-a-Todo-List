@@ -132,8 +132,6 @@ function ToDoList() {
   const [completed, setCompleted] = useState(false);
   const [todo, dispatch] = useReducer(todoReducer, initialState);
 
-  console.log(completed);
-
   const toDoList = todo.map((task) => {
     return <ToDOItems key={task.id} task={task} dispatch={dispatch} />;
   });
