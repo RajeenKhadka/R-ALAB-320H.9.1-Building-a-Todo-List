@@ -1,9 +1,10 @@
 export default function reducer(
   state,
-  { type, payload: { title, completed, step } }
+  { type, payload: { title, completed, id, newTitle, newCompleted } }
 ) {
   switch (type) {
     case "add-task": {
+      let nextID = state.length + 1;
       if (title === "") {
         return state;
       }
@@ -21,7 +22,12 @@ export default function reducer(
       }
 
       return [
-        { title: title, userId: 1, id: state.length + 1, completed: completed },
+        {
+          title: title,
+          userId: 1,
+          id: nextID++,
+          completed: completed,
+        },
         ...state,
       ];
     }
@@ -33,13 +39,11 @@ export default function reducer(
     }
 
     case "edit-task": {
-      return state.map((task) => {
-        if (task.title === title) {
-          return { ...task, completed: !task.completed };
-        } else {
-          return task;
-        }
-      });
+      return state.map((task) =>
+        task.id === id
+          ? { ...task, title: newTitle, completed: newCompleted }
+          : task
+      );
     }
 
     default: {
