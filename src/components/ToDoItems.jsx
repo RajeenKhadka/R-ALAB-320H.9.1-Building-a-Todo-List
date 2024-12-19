@@ -1,10 +1,10 @@
 import { useState } from "react";
-import ActionButton from "./ActionButton";
+import ActionButton from "./ActionButton"; // Assuming ActionButton is a custom component
 
 function ToDOItems({ task, dispatch }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(task.title);
-  const [newCompleted, setNewCompleted] = useState(task.completed);
+  const [newTitle, setNewTitle] = useState(task.title || ""); // Fallback to empty string
+  const [newCompleted, setNewCompleted] = useState(task.completed ?? false); // Fallback to false
 
   const handleSave = () => {
     if (newTitle.trim()) {
@@ -22,17 +22,12 @@ function ToDOItems({ task, dispatch }) {
     <div>
       <div style={{ width: "100%", textAlign: "center", marginTop: "10px" }}>
         {isEditing ? (
-          <ActionButton
-            type="edit-input"
-            payload={{ value: newTitle }}
-            dispatch={(payload) => setNewTitle(payload.value)}
-          >
-            <input
-              type="text"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-            />
-          </ActionButton>
+          <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            placeholder="Edit task title"
+          />
         ) : (
           <b>Task: {task.title}</b>
         )}
@@ -40,17 +35,11 @@ function ToDOItems({ task, dispatch }) {
       <div style={{ width: "100%", textAlign: "center", marginBottom: "20px" }}>
         {isEditing ? (
           <label>
-            <ActionButton
-              type="toggle-completed"
-              payload={{ checked: !newCompleted }}
-              dispatch={(payload) => setNewCompleted(payload.checked)}
-            >
-              <input
-                type="checkbox"
-                checked={newCompleted}
-                onChange={(e) => setNewCompleted(e.target.checked)}
-              />
-            </ActionButton>
+            <input
+              type="checkbox"
+              checked={newCompleted}
+              onChange={(e) => setNewCompleted(e.target.checked)} // Handle checkbox change directly
+            />
             Completed
           </label>
         ) : (
@@ -76,7 +65,7 @@ function ToDOItems({ task, dispatch }) {
           type="remove-task"
           payload={{ title: task.title }}
           dispatch={dispatch}
-          disabled={!task.completed}
+          disabled={!newCompleted} // Use newCompleted for disable logic
         >
           Delete
         </ActionButton>
